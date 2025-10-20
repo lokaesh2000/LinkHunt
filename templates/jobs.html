@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Jobs</title>
+  <style>
+    :root{
+      --bg:#0f1115;
+      --panel:#151923;
+      --panel-2:#101420;
+      --text:#e6e8ee;
+      --muted:#a7b0c0;
+      --brand:#5b8cff;
+      --brand-2:#3bb29a;
+      --danger:#ff6b6b;
+      --success:#4ad97b;
+      --warn:#ffd166;
+      --card:#1b2130;
+      --card-hover:#21283a;
+      --border:rgba(255,255,255,0.08);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background:linear-gradient(120deg,#0e1118 0%, #0d1220 60%, #0c1426 100%);
+    }
+
+    /* Top bar */
+    .topbar{
+      position:sticky; top:0; z-index:10;
+      display:flex; align-items:center; gap:16px;
+      padding:14px 18px;
+      background:rgba(16,20,32,0.85);
+      backdrop-filter:saturate(160%) blur(8px);
+      border-bottom:1px solid var(--border);
+    }
+    .brand{font-weight:700; letter-spacing:.3px}
+    .chip{
+      padding:6px 10px; border:1px solid var(--border);
+      border-radius:999px; color:var(--muted); font-size:.85rem;
+    }
+    .spacer{flex:1}
+    .hint{color:var(--muted); font-size:.85rem}
+
+    /* Two-pane layout */
+    .wrap{
+      display:grid;
+      grid-template-columns: 360px 1fr;
+      gap:16px;
+      padding:16px;
+      height:calc(100vh - 58px);
+    }
+
+    /* Left column (jobs list) */
+    .left{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:14px;
+      overflow:hidden;
+      display:flex; flex-direction:column;
+      min-width:300px;
+    }
+    .left-header{
+      padding:14px 14px 6px;
+      border-bottom:1px solid var(--border);
+      display:flex; align-items:center; gap:8px;
+    }
+    .search{
+      width:100%;
+      padding:10px 12px; border-radius:10px; border:1px solid var(--border);
+      background:var(--panel-2); color:var(--text); outline:none;
+    }
+    .list{
+      overflow:auto;
+      padding:12px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:10px;
+    }
+
+    /* Job tiles */
+    .job-item{
+      display:block;
+      padding:12px;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:12px;
+      text-decoration:none; color:inherit;
+      transition:transform .08s ease, background .12s ease, border-color .12s ease;
+    }
+    .job-item:hover{ background:var(--card-hover); transform:translateY(-1px) }
+    .job-item.job-item-selected{ outline:2px solid var(--brand); }
+    .job-item-applied{ background:rgba(91,140,255,.14) }
+    .job-item-interview{ background:rgba(58, 214, 150,.14) }
+    .job-item-rejected{ background:rgba(255,107,107,.14) }
+
+    .job-title{ margin:0 0 4px; font-size:1rem; font-weight:600 }
+    .meta{ margin:0; color:var(--muted); font-size:.9rem }
+    .date{ margin-top:6px; color:var(--muted); font-size:.8rem }
+
+    /* Right column (details + cover letter) */
+    .right{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:14px;
+      display:flex; flex-direction:column;
+      overflow:hidden;
+      min-width:420px;
+    }
+    .right-section-title{
+      margin:0; padding:14px 16px; font-size:1rem; font-weight:600;
+      border-bottom:1px solid var(--border);
+      background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0));
+    }
+    #job-details-wrapper{
+      display:flex; flex-direction:column; height:100%;
+    }
+    #job-details{
+      padding:16px; overflow:auto; flex:1; min-height:140px;
+    }
+    /* Action bar inside details */
+    .actions{
+      display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-start;
+      margin:8px 0 12px;
+    }
+    .job-button, .link-btn{
+      border:none; cursor:pointer;
+      padding:10px 14px; border-radius:10px;
+      background:var(--brand); color:white; font-weight:600; font-size:.92rem;
+    }
+    .link-btn{ text-decoration:none; display:inline-block }
+    .job-button:hover, .link-btn:hover{ filter:brightness(1.05) }
+    .btn-alt{ background:var(--brand-2) }
+    .btn-danger{ background:var(--danger) }
+    .btn-warn{ background:var(--warn); color:#1d222f }
+    .detail-meta{ color:var(--muted); margin:0 0 8px }
+    .job-description{ white-space:pre-line; line-height:1.45 }
+
+    /* Resizer + bottom pane */
+    #resizer{
+      height:6px; background:rgba(255,255,255,0.08); cursor:row-resize;
+      border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+    }
+    #bottom-pane{
+      padding:16px; overflow:auto; min-height:120px;
+      background:var(--panel-2);
+    }
+    #cover-letter-pane{ white-space:pre-line; color:var(--text) }
+
+    /* Responsive */
+    @media (max-width: 1100px){
+      .wrap{ grid-template-columns: 1fr; height:auto }
+      .left{ min-height:40vh }
+      .right{ min-height:50vh }
+    }
+  </style>
+</head>
+<body>
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="brand">LinkedIn Scraper</div>
+    <span class="chip">No sponsored posts</span>
+    <span class="chip">De-duped</span>
+    <div class="spacer"></div>
+    <div class="hint">Click a job to view details</div>
+  </div>
+
+  <div class="wrap">
+    <!-- LEFT: Jobs list -->
+    <aside class="left">
+      <div class="left-header">
+        <input class="search" placeholder="Filter locally (visual only)…" oninput="
+          const q = this.value.toLowerCase();
+          document.querySelectorAll('.job-item').forEach(el=>{
+            const t = el.textContent.toLowerCase();
+            el.style.display = t.includes(q) ? '' : 'none';
+          });
+        " />
+      </div>
+      <div class="list">
+        {% for job in jobs %}
+        <a
+          class="{% if job.rejected == 1 %}job-item job-item-rejected{% elif job.interview == 1 %}job-item job-item-interview{% elif job.applied == 1 %}job-item job-item-applied{% else %}job-item{% endif %}"
+          href="#"
+          onclick="event.preventDefault(); showJobDetails('{{ job.id }}')"
+          data-job-id="{{ job.id }}"
+        >
+          <h3 class="job-title">{{ job.title }}</h3>
+          <p class="meta">{{ job.company }} • {{ job.location }}</p>
+          <p class="date">{{ job.date }}</p>
+        </a>
+        {% endfor %}
+      </div>
+    </aside>
+
+    <!-- RIGHT: Details + cover letter -->
+    <section class="right" id="job-details-wrapper">
+      <h3 class="right-section-title">Job Details</h3>
+      <div id="job-details">
+        <!-- Filled by JS -->
+      </div>
+      <div id="resizer"></div>
+      <h3 class="right-section-title">Cover Letter</h3>
+      <div id="bottom-pane">
+        <div id="cover-letter-pane"></div>
+      </div>
+    </section>
+  </div>
+
+  <script src="/static/job_actions.js"></script>
+
+  <!-- Small enhancement: style buttons that your JS injects -->
+  <script>
+    // Patch the injected buttons with nicer classes AFTER content loads
+    const _origUpdate = window.updateJobDetails;
+    if (typeof _origUpdate === 'function') {
+      window.updateJobDetails = function(job){
+        _origUpdate(job);
+        // decorate the action buttons your JS writes
+        const root = document.getElementById('job-details');
+        root.querySelectorAll('.job-button').forEach((btn, idx) => {
+          btn.classList.add(idx===0 ? 'link-btn' : 'job-button'); // first is "Go to job" <a>
+          // add color accents to common actions without changing names
+          if (btn.textContent.includes('Cover Letter')) btn.classList.add('btn-alt');
+          if (btn.textContent.includes('Applied')) btn.classList.add('btn-alt');
+          if (btn.textContent.includes('Interview')) btn.classList.add('btn-warn');
+          if (btn.textContent.includes('Rejected')) btn.classList.add('btn-danger');
+        });
+        // make external link look like our button
+        const anchor = root.querySelector('a.job-button');
+        if (anchor){ anchor.className = 'link-btn'; }
+      }
+    }
+  </script>
+</body>
+</html>

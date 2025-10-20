@@ -1,0 +1,20 @@
+
+# --- Web Framework ---
+Flask
+flask_cors
+
+# --- HTTP & Scraping ---
+requests
+beautifulsoup4
+pysocks
+
+# --- Data Processing ---
+pandas
+langdetect
+
+# --- AI & PDF Parsing ---
+openai
+pdfminer.six
+
+# --- Utility / Optional ---
+python-dotenv

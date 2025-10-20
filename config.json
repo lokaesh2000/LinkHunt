@@ -1,0 +1,49 @@
+{
+  "proxies": {
+
+  },
+  "headers": {
+
+  },
+
+  "OpenAI_API_KEY": "YOUR OPENAI KEY",
+  "OpenAI_Model": "gpt-4o-mini",
+  "resume_path": "PATH TO YOUR RESUME",
+
+  "search_queries": [
+    {"keywords": "Data Scientist", "location": "United States", "f_WT": ""},
+    {"keywords": "Machine Learning Engineer", "location": "USA", "f_WT": "2"},
+    {"keywords": "AI Engineer", "location": "Remote", "f_WT": ""}
+  ],
+
+  "desc_words": [
+    "data analysis", "machine learning", "deep learning", "neural networks",
+    "NLP", "computer vision", "AI", "analytics", "statistics", "predictive modeling",
+    "data visualization", "SQL", "Python", "PyTorch", "TensorFlow", "scikit-learn",
+    "data pipelines", "ETL", "data engineering", "big data", "AWS", "GCP", "Azure",
+    "data-driven", "forecasting", "MLOps", "model deployment", "feature engineering",
+    "mathematics", "data mining", "experimentation", "data science", "business insights"
+  ],
+
+  "title_exclude": [
+    "frontend", "front end", "game", "graphic", "UI", "UX", "intern", "manager"
+  ],
+
+  "title_include": [
+    "data scientist", "machine learning", "AI engineer", "data analyst", "research scientist"
+  ],
+
+  "company_exclude": [
+    "ClickJobs.io", "Jooble", "CareerBuilder"
+  ],
+
+  "languages": ["en"],
+  "timespan": "r84600",
+  "jobs_tablename": "jobs",
+  "filtered_jobs_tablename": "filtered_jobs",
+  "db_path": "./data/my_database.db",
+  "pages_to_scrape": 10,
+  "rounds": 1,
+  "days_to_scrape": 10,
+  "app_table": "jobs"
+}
